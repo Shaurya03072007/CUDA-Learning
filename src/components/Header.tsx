@@ -48,7 +48,7 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="hidden lg:flex items-center gap-4 text-xs bg-slate-950/60 px-3.5 py-1.5 rounded-lg border border-slate-800">
               <div className="flex items-center gap-1.5 text-slate-300">
                 <Layers className="w-3.5 h-3.5 text-emerald-400" />
-                <span><strong className="text-white">100</strong> Examples (10 Levels)</span>
+                <span><strong className="text-white">36</strong> Levels • <strong className="text-emerald-400">100 Stages Each</strong></span>
               </div>
               <div className="h-3 w-px bg-slate-800" />
               <div className="flex items-center gap-1.5 text-slate-300">

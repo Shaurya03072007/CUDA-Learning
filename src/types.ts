@@ -7,22 +7,13 @@ export type TabType =
   | 'gpu_simulator' 
   | 'kernel_playground';
 
-export type CurriculumLevelId = 
-  | 'level_0'
-  | 'level_1'
-  | 'level_2'
-  | 'level_3'
-  | 'level_4'
-  | 'level_5'
-  | 'level_6'
-  | 'level_7'
-  | 'level_8'
-  | 'level_9'
-  | 'level_10';
+export type CurriculumLevelId = string;
 
 export interface CurriculumTopic {
   id: string;
+  stageNumber?: number;
   exampleNumber?: number;
+  phase?: string;
   difficulty?: 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert';
   title: string;
   subtitle: string;
@@ -38,9 +29,12 @@ export interface CurriculumTopic {
   mentalModelDiagram?: string;
 }
 
+export type CurriculumStage = CurriculumTopic;
+
 export interface CurriculumLevel {
   id: CurriculumLevelId;
   levelNumber: number;
+  category?: string;
   title: string;
   subtitle: string;
   badge: string;

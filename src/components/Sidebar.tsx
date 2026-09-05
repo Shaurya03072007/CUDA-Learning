@@ -26,9 +26,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const tabs = [
     {
       id: 'curriculum' as TabType,
-      label: '10-Level Curriculum',
+      label: '36-Level Curriculum',
       icon: GraduationCap,
-      badge: '100 Examples',
+      badge: '100 Stages/Lvl',
       badgeColor: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
     },
     {

@@ -3,7 +3,6 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig} from 'vite';
 
-// vite.config.ts
 export default defineConfig(() => {
   return {
     plugins: [react(), tailwindcss()],
@@ -13,9 +12,11 @@ export default defineConfig(() => {
       },
     },
     server: {
-      // Allows Render domains, custom domains, and tunnels
+      // Allow all external hosts (Render, custom domains)
       allowedHosts: true as const,
+      // HMR is disabled in AI Studio via DISABLE_HMR env var.
       hmr: process.env.DISABLE_HMR !== 'true',
+      // Disable file watching when DISABLE_HMR is true to save CPU during agent edits.
       watch: process.env.DISABLE_HMR === 'true' ? null : {},
     },
     preview: {

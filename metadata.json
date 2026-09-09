@@ -1,6 +1,6 @@
 {
   "name": "CUDA C++ Deep Learning & PyTorch Infra Mastery",
-  "description": "Comprehensive from-scratch CUDA C++ deep learning infrastructure curriculum, 1,000+ files & code examples, two complete production engines (MiniTorch-CUDA & FlashLLM), 1,000 question bank, 5 mini-projects, and 2 major framework guides.",
+  "description": "Comprehensive from-scratch CUDA C++ deep learning infrastructure curriculum with 36 mastery levels, 100 progressive stages per level (3,600 total stages), two complete production engines, and 1,000 question bank.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

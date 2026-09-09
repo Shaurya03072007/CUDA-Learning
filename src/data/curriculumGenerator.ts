@@ -1,4 +1,5 @@
 import { CurriculumLevel, CurriculumTopic } from '../types';
+import { synthesizeStage } from './stageCodeSynthesizer';
 
 export interface LevelDefinition {
   id: string;
@@ -1225,15 +1226,16 @@ TORCH_LIBRARY(custom_infra_ops, m) {
 // Generate exactly 100 stages for any given level definition
 export function generate100StagesForLevel(levelDef: LevelDefinition): CurriculumTopic[] {
   const stages: CurriculumTopic[] = [];
-  const { stageTopics } = levelDef;
 
   for (let stageNum = 1; stageNum <= 100; stageNum++) {
+    const artifact = synthesizeStage(levelDef, stageNum);
+
     let phaseName = '';
     let difficulty: 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert' = 'Beginner';
 
     if (stageNum <= 25) {
       phaseName = `Phase 1: Foundations & Architecture (Stages 1–25)`;
-      difficulty = stageNum <= 10 ? 'Beginner' : 'Intermediate';
+      difficulty = stageNum <= 12 ? 'Beginner' : 'Intermediate';
     } else if (stageNum <= 50) {
       phaseName = `Phase 2: Algorithmic Implementation & Kernels (Stages 26–50)`;
       difficulty = 'Intermediate';
@@ -1245,80 +1247,25 @@ export function generate100StagesForLevel(levelDef: LevelDefinition): Curriculum
       difficulty = 'Expert';
     }
 
-    // Dynamic descriptive title based on stage progression
-    let stageTitle = '';
-    let stageSubtitle = '';
-    let readTime = '12 min';
-
-    if (stageNum === 1) {
-      stageTitle = `Stage 1: ${levelDef.coreTopic} — Problem Definition & Silicon Model`;
-      stageSubtitle = `Foundational setup, memory footprint analysis, and hardware execution context.`;
-    } else if (stageNum === 25) {
-      stageTitle = `Stage 25: ${levelDef.coreTopic} — Phase 1 Milestone Verification`;
-      stageSubtitle = `Consolidating memory models, data structures, and baseline throughput metrics.`;
-      readTime = '15 min';
-    } else if (stageNum === 50) {
-      stageTitle = `Stage 50: ${levelDef.coreTopic} — Core Kernel Benchmark & Bandwidth Optimization`;
-      stageSubtitle = `Achieving baseline correctness and profiling initial memory bus saturation.`;
-      readTime = '15 min';
-    } else if (stageNum === 75) {
-      stageTitle = `Stage 75: ${levelDef.coreTopic} — Warp-Level Specialization & Latency Hiding`;
-      stageSubtitle = `Eliminating hardware stalls, bank conflicts, and register pressure.`;
-      readTime = '18 min';
-    } else if (stageNum === 100) {
-      stageTitle = `Stage 100: ${levelDef.coreTopic} — Capstone Production Engine & Nsight Audit`;
-      stageSubtitle = `Final production deployment, mathematical verification, and full-stack integration.`;
-      readTime = '20 min';
-    } else {
-      const stepInPhase = (stageNum - 1) % 25 + 1;
-      const phaseTheme = stageNum <= 25 ? stageTopics.phase1Theme
-        : stageNum <= 50 ? stageTopics.phase2Theme
-        : stageNum <= 75 ? stageTopics.phase3Theme
-        : stageTopics.phase4Theme;
-
-      stageTitle = `Stage ${stageNum}: ${levelDef.coreTopic} — Step ${stepInPhase} (${phaseTheme})`;
-      stageSubtitle = `Targeted refinement #${stepInPhase}: Optimizing instruction execution and hardware throughput.`;
-    }
-
     stages.push({
       id: `${levelDef.id}_stage_${stageNum}`,
       stageNumber: stageNum,
       exampleNumber: stageNum,
       phase: phaseName,
       difficulty,
-      title: stageTitle,
-      subtitle: stageSubtitle,
-      readTime,
-      prerequisites: stageNum === 1 
-        ? stageTopics.keyPrerequisites 
-        : [`Stage ${stageNum - 1}: Previous Progression Step`],
-      concepts: [
-        `Core Focus: ${stageTitle}`,
-        `Hardware Target: ${stageTopics.hardwareFocus}`,
-        `Pedagogical Goal: Advancing towards stage 100 production mastery in ${levelDef.coreTopic}`,
-        `Phase: ${phaseName}`
-      ],
-      cPlusPlusTheory: `In ${levelDef.title} (Stage ${stageNum} of 100):
-This stage isolates and masters specific architectural mechanics for ${stageTitle}.
-As part of ${phaseName}, you are developing low-level systems intuition for how memory, registers, and execution units coordinate.
-Key Theoretical Insight:
-- Ensure optimal memory alignment and minimize round-trip latencies.
-- Balance register allocation against maximum thread block occupancy.
-- Enforce strict synchronizations and avoid data hazard race conditions.`,
-      hardwareMechanics: `Hardware Execution Mechanics (Stage ${stageNum}):
-${stageTopics.hardwareFocus}
-Every thread, warp, and memory transaction in this stage is tuned to saturate physical silicon paths without tripping hardware stalls.`,
-      kernelCode: levelDef.sampleKernel(stageNum, stageTitle),
-      kernelExplanation: [
-        `Line 1-4: Header inclusions and configuration for Stage ${stageNum}.`,
-        `Core logic: Implements specialized microkernel targeting ${levelDef.coreTopic}.`,
-        `Verification: Compiles cleanly with standard NVCC flags (-O3 --std=c++20).`
-      ],
-      commonPitfalls: [
-        `Pitfall to avoid in Stage ${stageNum}: ${stageTopics.pitfallFocus}`,
-        `Ignoring boundary guards when grid dimensions do not divide evenly by block size.`
-      ],
-      benchmarkingNotes: `Stage ${stageNum} Performance Target: Monitored with Nsight Compute; aim for >85% compute or memory roofline utilization.`
+      title: artifact.title,
+      subtitle: `${levelDef.coreTopic} • ${artifact.subtitle}`,
+      readTime: stageNum <= 25 ? '12 min' : stageNum <= 50 ? '15 min' : stageNum <= 75 ? '18 min' : '22 min',
+      prerequisites: stageNum === 1
+        ? levelDef.stageTopics.keyPrerequisites
+        : [`Stage ${stageNum - 1}: Previous progression step`],
+      concepts: artifact.concepts,
+      cPlusPlusTheory: artifact.cPlusPlusTheory,
+      hardwareMechanics: artifact.hardwareMechanics,
+      kernelCode: artifact.kernelCode,
+      kernelExplanation: artifact.kernelExplanation,
+      commonPitfalls: artifact.commonPitfalls,
+      benchmarkingNotes: artifact.benchmarkingNotes
     });
   }
 

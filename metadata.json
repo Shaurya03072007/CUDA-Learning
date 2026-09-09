@@ -1,6 +1,6 @@
 {
   "name": "CUDA C++ Deep Learning & PyTorch Infra Mastery",
-  "description": "Comprehensive from-scratch CUDA C++ deep learning infrastructure curriculum with 36 mastery levels, 100 progressive stages per level (3,600 total stages), two complete production engines, and 1,000 question bank.",
-  "requestFramePermissions": [],
+  "description": "Comprehensive from-scratch CUDA C++ deep learning infrastructure curriculum with 36 mastery levels, 100 progressive stages per level (3,600 total stages), two complete production engines, 1,000 question bank, and Gemini AI voice/text chatbot.",
+  "requestFramePermissions": ["microphone"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

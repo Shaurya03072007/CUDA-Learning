@@ -5,7 +5,8 @@ export type TabType =
   | 'project_guides' 
   | 'questions_bank' 
   | 'gpu_simulator' 
-  | 'kernel_playground';
+  | 'kernel_playground'
+  | 'ai_chat';
 
 export type CurriculumLevelId = string;
 

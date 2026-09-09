@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import http from 'http';
 import path from 'path';
+import fs from 'fs';
 import { WebSocketServer, WebSocket } from 'ws';
 import { GoogleGenAI, Modality, LiveServerMessage } from '@google/genai';
 import dotenv from 'dotenv';
@@ -21,7 +22,9 @@ dotenv.config();
 // Support user-configured credentials pasted in .env.example
 dotenv.config({ path: path.resolve(process.cwd(), '.env.example') });
 
-const PORT = 3000;
+// Port configuration: AI Studio internal proxy routes strictly to 3000.
+// On cloud hosts like Render, use process.env.PORT (Render sets RENDER=true).
+const PORT = process.env.RENDER ? (Number(process.env.PORT) || 3000) : 3000;
 const app = express();
 const server = http.createServer(app);
 
@@ -525,9 +528,14 @@ async function startServer() {
     app.use(vite.middlewares);
   } else {
     const distPath = path.join(process.cwd(), 'dist');
+    const indexPath = path.join(distPath, 'index.html');
     app.use(express.static(distPath));
     app.get('*', (req: Request, res: Response) => {
-      res.sendFile(path.join(distPath, 'index.html'));
+      if (fs.existsSync(indexPath)) {
+        res.sendFile(indexPath);
+      } else {
+        res.status(500).send('Production build not found. Please ensure "npm run build" is included in the Render Build Command.');
+      }
     });
   }
 

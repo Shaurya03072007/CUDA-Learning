@@ -18,6 +18,8 @@ import {
 } from './src/services/supabaseService';
 
 dotenv.config();
+// Support user-configured credentials pasted in .env.example
+dotenv.config({ path: path.resolve(process.cwd(), '.env.example') });
 
 const PORT = 3000;
 const app = express();
